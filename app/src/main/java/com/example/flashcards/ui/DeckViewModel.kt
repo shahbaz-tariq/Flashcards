@@ -36,6 +36,12 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
     fun getAllDistinctDecks(): Flow<List<String>> {
         return repository.getAllDistinctDecks()
     }
+
+    fun getDeckById(deckId: Int): Flow<Deck> {
+        return repository.getDeckById(deckId)
+    }
+
+
 }
 
 class DeckViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

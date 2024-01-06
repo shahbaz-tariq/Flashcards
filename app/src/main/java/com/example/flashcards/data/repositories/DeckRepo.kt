@@ -24,4 +24,9 @@ class DeckRepository(private val deckDao: DeckDao) {
     fun getAllDistinctDecks(): Flow<List<String>> {
         return deckDao.getAllDistinctDecks()
     }
+
+    fun getDeckById(deckId: Int): Flow<Deck> {
+        return deckDao.getDeckById(deckId)
+    }
+
 }

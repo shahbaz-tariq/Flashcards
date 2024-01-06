@@ -26,4 +26,8 @@ interface DeckDao {
 
     @Query("SELECT DISTINCT deckName FROM flashcards")
     fun getAllDistinctDecks(): Flow<List<String>>
+
+    @Query("SELECT * FROM decks WHERE id = :deckId")
+    fun getDeckById(deckId: Int): Flow<Deck>
+
 }

@@ -9,6 +9,10 @@ android {
     namespace = "com.example.flashcards"
     compileSdk = 34
 
+    buildFeatures{
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.flashcards"
         minSdk = 26
