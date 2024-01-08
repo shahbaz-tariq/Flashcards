@@ -21,6 +21,10 @@ class DeckRepository(private val deckDao: DeckDao) {
         deckDao.deleteDeck(deck)
     }
 
+//    fun getAllDecks(): Flow<List<Deck>>{
+//        return deckDao.getAllDecks()
+//    }
+
     fun getAllDistinctDecks(): Flow<List<String>> {
         return deckDao.getAllDistinctDecks()
     }

@@ -3,6 +3,7 @@ package com.example.flashcards.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.flashcards.data.database.AppDatabase
@@ -13,12 +14,12 @@ import kotlinx.coroutines.flow.Flow
 class DeckViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: DeckRepository
-    val allDecks: Flow<List<Deck>>
+    val allDecks: LiveData<List<Deck>>
 
     init {
         val deckDao = AppDatabase.getDatabase(application).deckDao()
         repository = DeckRepository(deckDao)
-        allDecks = repository.allDecks
+        allDecks = repository.allDecks.asLiveData()
     }
 
     suspend fun insert(deck: Deck) {
