@@ -27,6 +27,7 @@ class DeckListAdapter : ListAdapter<Deck, DeckListAdapter.DeckViewHolder>(DeckDi
 
         private val deckNameTextView: TextView = itemView.findViewById(R.id.deck_name)
         private val cardCountTextView: TextView = itemView.findViewById(R.id.card_count)
+        private val deckDescription: TextView = itemView.findViewById(R.id.deck_description)
 
         init {
             itemView.setOnClickListener {
@@ -40,8 +41,9 @@ class DeckListAdapter : ListAdapter<Deck, DeckListAdapter.DeckViewHolder>(DeckDi
 
         fun bind(deck: Deck) {
             deckNameTextView.text = deck.deckName
-            val cardCount = "Number of Cards: ${deck.flashcards.size}"
+            val cardCount = "${deck.flashcards.size} Cards"
             cardCountTextView.text = cardCount
+            deckDescription.text = deck.description
         }
     }
 
