@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.DeckListAdapter
 import com.example.flashcards.databinding.FragmentHomeBinding
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.example.flashcards.R
 import com.example.flashcards.data.model.Deck
 import kotlinx.coroutines.launch
@@ -53,9 +54,9 @@ class HomeFragment : Fragment() {
         }
 
         // Handle deck item click for navigation
-        adapter.setOnItemClickListener { /*deck ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDeckDetailFragment(deck.id)
-            findNavController().navigate(action)*/
+        adapter.setOnItemClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToDeckDetailFragment(it.id)
+            findNavController().navigate(action)
         }
     }
 

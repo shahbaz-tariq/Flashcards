@@ -28,6 +28,6 @@ interface DeckDao {
     fun getAllDistinctDecks(): Flow<List<String>>
 
     @Query("SELECT * FROM decks WHERE id = :deckId")
-    fun getDeckById(deckId: Int): Flow<Deck>
+    fun getDeckById(deckId: Int): LiveData<Deck>
 
 }

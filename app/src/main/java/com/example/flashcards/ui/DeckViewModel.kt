@@ -38,7 +38,7 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getAllDistinctDecks()
     }
 
-    fun getDeckById(deckId: Int): Flow<Deck> {
+    fun getDeckById(deckId: Int): LiveData<Deck> {
         return repository.getDeckById(deckId)
     }
 

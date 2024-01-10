@@ -29,7 +29,7 @@ class DeckRepository(private val deckDao: DeckDao) {
         return deckDao.getAllDistinctDecks()
     }
 
-    fun getDeckById(deckId: Int): Flow<Deck> {
+    fun getDeckById(deckId: Int): LiveData<Deck> {
         return deckDao.getDeckById(deckId)
     }
 
