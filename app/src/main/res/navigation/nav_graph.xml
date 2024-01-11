@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.flashcards.ui.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="Decks">
         <action
             android:id="@+id/action_homeFragment_to_deckDetailFragment"
             app:destination="@id/deckDetailFragment" />
@@ -15,10 +15,10 @@
     <fragment
         android:id="@+id/deckDetailFragment"
         android:name="com.example.flashcards.DeckDetailFragment"
-        android:label="DeckDetailFragment" >
+        android:label="Flashcards">
         <argument
             android:name="deckId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -9,5 +9,5 @@ data class Flashcard(
     val id: Int = 0,
     val question: String,
     val answer: String,
-    val deckName: String // Add deckName property
+    val deckName: String
 )
