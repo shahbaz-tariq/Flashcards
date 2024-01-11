@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.observe
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.data.model.Deck
 import com.example.flashcards.databinding.FragmentDeckDetailBinding
 import com.example.flashcards.ui.DeckViewModel
+import kotlinx.coroutines.launch
 
 class DeckDetailFragment : Fragment() {
 
@@ -42,26 +44,29 @@ class DeckDetailFragment : Fragment() {
 
 
         // Observe deck details and update UI
-        viewModel.getDeckById(deckId).observe(viewLifecycleOwner) { deck: Deck ->
-            // Update UI with deck details
-            binding.textDeckName.text = deck.deckName
-            binding.textDeckDescription.text = deck.description ?: ""
+        lifecycleScope.launch() {
+            viewModel.getDeckById(deckId).collect{ deck: Deck ->
+                // Update UI with deck details
+                binding.textDeckName.text = deck.deckName
+                binding.textDeckDescription.text = deck.description ?: ""
 
-            // Set up RecyclerView for flashcards
-            val flashcardAdapter = FlashcardAdapter(deck.flashcards) // Pass flashcards from deck
-            binding.recyclerViewFlashcards.layoutManager = LinearLayoutManager(requireContext())
-            binding.recyclerViewFlashcards.adapter = flashcardAdapter
+                // Set up RecyclerView for flashcards
+                val flashcardAdapter =
+                    FlashcardAdapter(deck.flashcards) // Pass flashcards from deck
+                binding.recyclerViewFlashcards.layoutManager = LinearLayoutManager(requireContext())
+                binding.recyclerViewFlashcards.adapter = flashcardAdapter
 
-            // Handle button clicks
-            binding.btnQuizDeck.setOnClickListener {
-                //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToQuizFragment(deckId))
+                // Handle button clicks
+                binding.btnQuizDeck.setOnClickListener {
+                    //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToQuizFragment(deckId))
+                }
+
+                binding.btnStudyDeck.setOnClickListener {
+                    //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToFlashcardStudyFragment(deckId))
+                }
+
+                // Additional button click handlers for add/edit/delete flashcards, delete deck, etc.
             }
-
-            binding.btnStudyDeck.setOnClickListener {
-                //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToFlashcardStudyFragment(deckId))
-            }
-
-            // Additional button click handlers for add/edit/delete flashcards, delete deck, etc.
         }
     }
 }
