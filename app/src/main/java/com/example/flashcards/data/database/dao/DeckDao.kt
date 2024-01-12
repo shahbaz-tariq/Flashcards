@@ -30,4 +30,7 @@ interface DeckDao {
     @Query("SELECT * FROM decks WHERE id = :deckId")
     fun getDeckById(deckId: Int): Flow<Deck>
 
+    /*@Query("DELETE FROM decks WHERE id = :deckId AND flashcardId = :flashcardId")
+    suspend fun removeFlashcardFromDeck(deckId: Int, flashcardId: Int)*/
+
 }

@@ -18,7 +18,7 @@ import com.example.flashcards.ui.FlashcardViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class DeckDetailFragment : Fragment() {
+class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener {
 
     private lateinit var binding: FragmentDeckDetailBinding
     private lateinit var viewModel: DeckViewModel
@@ -58,7 +58,10 @@ class DeckDetailFragment : Fragment() {
 
                 // Set up RecyclerView for flashcards
                 flashcardAdapter =
-                    FlashcardAdapter(deck.flashcards) // Pass flashcards from deck
+                    FlashcardAdapter(
+                        deck.flashcards,
+                        this@DeckDetailFragment
+                    ) // Pass flashcards from deck
                 binding.recyclerViewFlashcards.layoutManager = LinearLayoutManager(requireContext())
                 binding.recyclerViewFlashcards.adapter = flashcardAdapter
                 flashcardAdapter.notifyDataSetChanged()
@@ -71,7 +74,7 @@ class DeckDetailFragment : Fragment() {
                     showAddFlashcardDialog()
                 }
 
-                // Additional button click handlers for add/edit/delete flashcards, delete deck, etc.
+
             }
         }
     }
@@ -125,5 +128,70 @@ class DeckDetailFragment : Fragment() {
 
         builder.show()
     }
+
+    override fun onEditClick(flashcard: Flashcard) {
+        // Handle edit click for the flashcard
+        // You can open a dialog or navigate to another screen for editing
+        showEditFlashcardDialog(flashcard)
+    }
+
+    override fun onDeleteClick(flashcard: Flashcard) {
+        // Handle delete click for the flashcard
+        // You can show a confirmation dialog and proceed with deletion
+        showDeleteConfirmationDialog(flashcard)
+    }
+
+    private fun showEditFlashcardDialog(flashcard: Flashcard) {
+        // Inflate dialog layout with EditTexts for question/answer
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_flashcard, null)
+        val editQuestion = dialogView.findViewById<EditText>(R.id.editQuestion)
+        val editAnswer = dialogView.findViewById<EditText>(R.id.editAnswer)
+
+        // Pre-fill EditTexts with existing values
+        editQuestion.setText(flashcard.question)
+        editAnswer.setText(flashcard.answer)
+
+        // Set up dialog and handle "Update" button click
+        val builder = AlertDialog.Builder(context)
+            .setTitle("Edit Flashcard")
+            .setView(dialogView)
+            .setPositiveButton("Update") { _, _ ->
+                val updatedQuestion = editQuestion.text.toString().trim()
+                val updatedAnswer = editAnswer.text.toString().trim()
+
+                val updatedFlashcard = Flashcard(
+                    id = flashcard.id,
+                    question = updatedQuestion,
+                    answer = updatedAnswer,
+                    deckName = flashcard.deckName  // Maintain the deck association
+                )
+
+                // Call ViewModel to update flashcard in database
+                lifecycleScope.launch {
+                    viewModel2.update(updatedFlashcard)
+                    viewModel.updateFlashcardsInDeck(updatedFlashcard.deckName)
+                    flashcardAdapter.notifyDataSetChanged()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showDeleteConfirmationDialog(flashcard: Flashcard) {
+        AlertDialog.Builder(context)
+            .setTitle("Delete Flashcard")
+            .setMessage("Are you sure you want to delete this flashcard?")
+            .setPositiveButton("Delete") { _, _ ->
+                // Call ViewModel to delete flashcard from database
+                lifecycleScope.launch {
+                    viewModel2.delete(flashcard)
+                    viewModel.updateFlashcardsInDeck(flashcard.deckName)
+                    flashcardAdapter.notifyDataSetChanged()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 
 }

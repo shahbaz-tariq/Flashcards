@@ -33,4 +33,8 @@ class DeckRepository(private val deckDao: DeckDao) {
         return deckDao.getDeckById(deckId)
     }
 
+    suspend fun removeFlashcardFromDeck(deckId: Int, flashcardId: Int) {
+        deckDao.removeFlashcardFromDeck(deckId, flashcardId)
+    }
+
 }
