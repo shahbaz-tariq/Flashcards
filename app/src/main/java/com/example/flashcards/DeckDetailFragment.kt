@@ -169,7 +169,6 @@ class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener
                 // Call ViewModel to update flashcard in database
                 lifecycleScope.launch {
                     viewModel2.update(updatedFlashcard)
-                    viewModel.updateFlashcardsInDeck(updatedFlashcard.deckName)
                     flashcardAdapter.notifyDataSetChanged()
                 }
             }
@@ -185,13 +184,10 @@ class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener
                 // Call ViewModel to delete flashcard from database
                 lifecycleScope.launch {
                     viewModel2.delete(flashcard)
-                    viewModel.updateFlashcardsInDeck(flashcard.deckName)
                     flashcardAdapter.notifyDataSetChanged()
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
-
-
 }
