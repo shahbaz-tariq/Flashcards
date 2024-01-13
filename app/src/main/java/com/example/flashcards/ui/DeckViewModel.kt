@@ -42,10 +42,6 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getDeckById(deckId)
     }
 
-    suspend fun removeFlashcardFromDeck(deckId: Int, flashcardId: Int) {
-        repository.removeFlashcardFromDeck(deckId, flashcardId)
-    }
-
 }
 
 class DeckViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

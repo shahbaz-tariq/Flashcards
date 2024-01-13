@@ -26,6 +26,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textDeckName"
         tools:text="Deck Details" />
 
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Deck"
+        app:layout_constraintBottom_toBottomOf="@+id/textDeckDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textDeckName" />
+
     <!-- Flashcards RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFlashcards"

@@ -21,7 +21,7 @@ class FlashcardRepository(private val flashcardDao: FlashcardDao) {
         flashcardDao.deleteFlashcard(flashcard)
     }
 
-    fun getFlashcardsByDeck(deckName: String): Flow<List<Flashcard>> {
+    fun getFlashcardsByDeck(deckName: String?): Flow<List<Flashcard>> {
         return flashcardDao.getFlashcardsByDeck(deckName)
     }
 }

@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.data.model.Deck
 import com.example.flashcards.data.model.Flashcard
 import com.example.flashcards.databinding.FragmentDeckDetailBinding
 import com.example.flashcards.ui.DeckViewModel
 import com.example.flashcards.ui.FlashcardViewModel
+import com.example.flashcards.ui.HomeFragmentDirections
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -53,28 +55,39 @@ class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener
         lifecycleScope.launch() {
             viewModel.getDeckById(deckId).collect { deck: Deck ->
                 // Update UI with deck details
-                binding.textDeckName.text = deck.deckName
-                binding.textDeckDescription.text = deck.description ?: ""
+                if (deck != null) {
+                    binding.textDeckName.text = deck?.deckName ?: ""
+                    binding.textDeckDescription.text = deck?.description ?: ""
 
-                // Set up RecyclerView for flashcards
-                flashcardAdapter =
-                    FlashcardAdapter(
-                        deck.flashcards,
-                        this@DeckDetailFragment
-                    ) // Pass flashcards from deck
-                binding.recyclerViewFlashcards.layoutManager = LinearLayoutManager(requireContext())
-                binding.recyclerViewFlashcards.adapter = flashcardAdapter
-                flashcardAdapter.notifyDataSetChanged()
-                // Handle button clicks
-                binding.btnStudy.setOnClickListener {
-                    //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToFlashcardStudyFragment(deckId))
+                    // Set up RecyclerView for flashcards
+                    flashcardAdapter =
+                        FlashcardAdapter(
+                            deck.flashcards,
+                            this@DeckDetailFragment
+                        ) // Pass flashcards from deck
+                    binding.recyclerViewFlashcards.layoutManager =
+                        LinearLayoutManager(requireContext())
+                    binding.recyclerViewFlashcards.adapter = flashcardAdapter
+                    flashcardAdapter.notifyDataSetChanged()
+                    // Handle button clicks
+                    binding.btnStudy.setOnClickListener {
+                        //findNavController().navigate(DeckDetailFragmentDirections.actionDeckDetailFragmentToFlashcardStudyFragment(deckId))
+                    }
+
+                    binding.btnAdd.setOnClickListener {
+                        showAddFlashcardDialog()
+                    }
+
+                    binding.btnDelete.setOnClickListener {
+                        showDeleteDeckConfirmationDialog(deck)
+                    }
+
+                    binding.btnStudy.setOnClickListener {
+                        val action = DeckDetailFragmentDirections.actionDeckDetailFragmentToStudyFragment(deck.deckName)
+                        findNavController().navigate(action)
+                    }
+
                 }
-
-                binding.btnAdd.setOnClickListener {
-                    showAddFlashcardDialog()
-                }
-
-
             }
         }
     }
@@ -190,4 +203,25 @@ class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+    private fun showDeleteDeckConfirmationDialog(deck: Deck) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Deck")
+            .setMessage("Are you sure you want to delete this deck?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteDeck(deck)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteDeck(deck: Deck) {
+        lifecycleScope.launch {
+            viewModel.delete(deck)
+
+            val action = DeckDetailFragmentDirections.actionDeckDetailFragmentToHomeFragment()
+            findNavController().navigate(action)
+        }
+    }
+
 }

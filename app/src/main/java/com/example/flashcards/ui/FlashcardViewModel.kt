@@ -33,7 +33,7 @@ class FlashcardViewModel(application: Application) : AndroidViewModel(applicatio
         repository.delete(flashcard)
     }
 
-    fun getFlashcardsByDeck(deckName: String): Flow<List<Flashcard>> {
+    fun getFlashcardsByDeck(deckName: String?): Flow<List<Flashcard>> {
         return repository.getFlashcardsByDeck(deckName)
     }
 }
