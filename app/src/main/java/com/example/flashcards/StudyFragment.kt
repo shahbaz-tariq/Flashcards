@@ -28,7 +28,7 @@ class StudyFragment : Fragment() {
 
         arguments?.let {
             // Retrieve deckId from navigation arguments
-            deckName = it.getString(deckName) // Handle potential null value
+            deckName = it.getString("deckName") // Handle potential null value
         }
     }
 
