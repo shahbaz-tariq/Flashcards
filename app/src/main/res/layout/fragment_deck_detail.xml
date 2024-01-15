@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/textDeckName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/textDeckDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,23 +29,23 @@
     <Button
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="58dp"
         android:text="Delete Deck"
-        app:layout_constraintBottom_toBottomOf="@+id/textDeckDescription"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textDeckName" />
+        app:layout_constraintBottom_toBottomOf="@+id/btnStudy"
+        app:layout_constraintEnd_toStartOf="@+id/btnAdd"
+        app:layout_constraintStart_toEndOf="@+id/btnStudy" />
 
     <!-- Flashcards RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFlashcards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="12dp"
-        tools:listitem="@layout/item_flashcard"
+        android:layout_margin="4dp"
         app:layout_constraintBottom_toTopOf="@+id/btnStudy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textDeckDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/textDeckDescription"
+        tools:listitem="@layout/item_flashcard" />
 
     <!-- Buttons for Add and Study -->
 
@@ -53,8 +53,9 @@
         android:id="@+id/btnStudy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:tooltipText="Study"
         android:src="@drawable/book"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -63,11 +64,12 @@
         android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:tooltipText="Add Flashcard"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
     <!-- Additional UI elements (buttons for add/edit/delete flashcards, delete deck, etc.) -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

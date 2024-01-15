@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.flashcards.data.model.Flashcard
@@ -16,19 +16,19 @@ import kotlinx.coroutines.launch
 
 class StudyFragment : Fragment() {
 
+    private val viewModel: FlashcardViewModel by viewModels()
     private lateinit var binding: FragmentStudyBinding
-    private lateinit var viewModel: FlashcardViewModel
     private var flashcards: List<Flashcard> = emptyList()
     private var currentFlashcardIndex = 0
     private var showingQuestion = true
     private var deckName: String? = ""
+    private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            // Retrieve deckId from navigation arguments
-            deckName = it.getString("deckName") // Handle potential null value
+            deckName = it.getString("deckName")
         }
     }
 
@@ -36,7 +36,6 @@ class StudyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentStudyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,73 +43,58 @@ class StudyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(FlashcardViewModel::class.java)
-
-        score = 0
-
-
-        // Bind the score TextView
+        binding.textScore.text = "Score: $score"
 
         lifecycleScope.launch {
             viewModel.getFlashcardsByDeck(deckName).collect { flashcardList ->
                 flashcards = flashcardList
-                Log.d("StudyFragment", "Flashcard list size: ${flashcards.size}")
                 showFlashcard()
             }
         }
 
-        binding.textScore.text = "Score: $score"
-
-        binding.btnToggle.setOnClickListener {
-            toggleCardSide()
-        }
-
-        binding.btnLearned.setOnClickListener {
-            onLearnedButtonClick()
-        }
-
-        binding.btnStillLearning.setOnClickListener {
-            onNextButtonClick()
-        }
-
+        binding.btnToggle.setOnClickListener { toggleCardSide() }
+        binding.btnLearned.setOnClickListener { onLearnedButtonClick() }
+        binding.btnStillLearning.setOnClickListener { onNextButtonClick() }
         binding.btnExitStudy.setOnClickListener {
-            val action = StudyFragmentDirections.actionStudyFragmentToHomeFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(StudyFragmentDirections.actionStudyFragmentToHomeFragment())
         }
     }
 
     private fun showFlashcard() {
         if (currentFlashcardIndex < flashcards.size) {
             val currentFlashcard = flashcards[currentFlashcardIndex]
-            val textToShow =
-                if (showingQuestion) currentFlashcard.question else currentFlashcard.answer
+            val textToShow = if (showingQuestion) currentFlashcard.question else currentFlashcard.answer
             binding.textFlashcard.text = textToShow
         }
     }
 
     private fun toggleCardSide() {
-        // Toggle between question and answer
         showingQuestion = !showingQuestion
         showFlashcard()
     }
 
-    private var score = 0
-
     private fun onLearnedButtonClick() {
-        // Increment score when the "Learned" button is clicked
-        score++
-
-        binding.textScore.text = "Score: $score"
-        // Move to the next flashcard
-        onNextButtonClick()
+        if (currentFlashcardIndex < flashcards.size) {
+            score++
+            binding.textScore.text = "Score: $score"
+            onNextButtonClick() // Move to the next flashcard
+        }
     }
 
     private fun onNextButtonClick() {
-        // Move to the next flashcard
         currentFlashcardIndex++
-        // Reset showing side to question
-        showingQuestion = true
-        // Show the next flashcard
+
+        if (currentFlashcardIndex >= flashcards.size) {  // Change to >=
+            // Last card reached
+            binding.btnLearned.isEnabled = false
+            binding.btnStillLearning.isEnabled = false
+            binding.btnToggle.isEnabled = false
+            binding.textScore.text = "Final Score: $score out of ${flashcards.size}"
+            binding.textFlashcard.text = "Congratulations on your learning journey!"
+        } else {
+            showingQuestion = true // Reset for regular navigation
+        }
+
         showFlashcard()
     }
 }

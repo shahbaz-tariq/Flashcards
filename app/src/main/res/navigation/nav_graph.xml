@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/studyFragment"
         android:name="com.example.flashcards.StudyFragment"
-        android:label="fragment_study"
+        android:label="Study Flashcards"
         tools:layout="@layout/fragment_study"
             >
         <argument

@@ -98,7 +98,7 @@ class DeckDetailFragment : Fragment(), FlashcardAdapter.FlashcardAdapterListener
         val flashcardAnswer = dialogView.findViewById<EditText>(R.id.flashcardAnswer)
 
         val builder = AlertDialog.Builder(context)
-            .setTitle("Add Deck")
+            .setTitle("Add Flashcard")
             .setView(dialogView)
             .setPositiveButton("Add") { _, _ ->
                 val currentQuestion = flashcardQuestion.text.toString().trim()
